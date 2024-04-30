@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Task } from './shared/task';
 import { remult } from 'remult';
+import { TasksController } from './shared/TasksController';
 
 const taskRepo = remult.repo(Task);
 
@@ -54,6 +55,10 @@ function App() {
 		}
 	}
 
+	async function setAllCompleted(completed: boolean) {
+		await TasksController.setAllCompleted(completed);
+	}
+
 	return (
 		<div>
 			<h1>Todos</h1>
@@ -83,6 +88,14 @@ function App() {
 						</div>
 					);
 				})}
+				<div>
+					<button onClick={(e) => setAllCompleted(true)}>
+						Set all completed
+					</button>
+					<button onClick={(e) => setAllCompleted(false)}>
+						Set all uncompleted
+					</button>
+				</div>
 			</main>
 		</div>
 	);

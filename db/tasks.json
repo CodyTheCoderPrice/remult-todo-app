@@ -6,12 +6,12 @@
   },
   {
     "title": "Read a book",
-    "completed": false,
+    "completed": true,
     "id": 2
   },
   {
     "title": "Take a nap",
-    "completed": true,
+    "completed": false,
     "id": 3
   },
   {
