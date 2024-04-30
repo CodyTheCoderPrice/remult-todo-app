@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormEvent, useEffect, useState } from 'react';
+import { Task } from './shared/task';
+import { remult } from 'remult';
+
+const taskRepo = remult.repo(Task);
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [tasks, setTasks] = useState<Task[]>([]);
+	const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	useEffect(() => {
+		taskRepo.find().then(setTasks);
+	}, []);
+
+	async function addTask(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		try {
+			const newTask = await taskRepo.insert({ title: newTaskTitle });
+			setTasks((tasks) => [...tasks, newTask]);
+			setNewTaskTitle('');
+		} catch (error: any) {
+			alert(error.message);
+		}
+	}
+
+	return (
+		<div>
+			<h1>Todos</h1>
+			<main>
+				<form onSubmit={(e) => addTask(e)}>
+					<input
+						value={newTaskTitle}
+						placeholder='What needs to be done?'
+						onChange={(e) => setNewTaskTitle(e.target.value)}
+					/>
+					<button>Add</button>
+				</form>
+				{tasks.map((task) => {
+					return (
+						<div key={task.id}>
+							<input type='checkbox' checked={task.completed} />
+							{task.title}
+						</div>
+					);
+				})}
+			</main>
+		</div>
+	);
 }
 
-export default App
+export default App;
