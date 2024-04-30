@@ -89,10 +89,10 @@ function App() {
 					);
 				})}
 				<div>
-					<button onClick={(e) => setAllCompleted(true)}>
+					<button onClick={() => setAllCompleted(true)}>
 						Set all completed
 					</button>
-					<button onClick={(e) => setAllCompleted(false)}>
+					<button onClick={() => setAllCompleted(false)}>
 						Set all uncompleted
 					</button>
 				</div>
