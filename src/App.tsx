@@ -9,7 +9,9 @@ function App() {
 	const [newTaskTitle, setNewTaskTitle] = useState('');
 
 	useEffect(() => {
-		taskRepo.find().then(setTasks);
+		return taskRepo
+			.liveQuery()
+			.subscribe((info) => setTasks(info.applyChanges));
 	}, []);
 
 	async function addTask(e: FormEvent<HTMLFormElement>) {
@@ -18,6 +20,35 @@ function App() {
 			const newTask = await taskRepo.insert({ title: newTaskTitle });
 			setTasks((tasks) => [...tasks, newTask]);
 			setNewTaskTitle('');
+		} catch (error: any) {
+			alert(error.message);
+		}
+	}
+
+	async function deleteTask(task: Task) {
+		try {
+			await taskRepo.delete(task);
+			setTasks((tasks) => tasks.filter((t) => t !== task));
+		} catch (error: any) {
+			alert(error.message);
+		}
+	}
+
+	async function setTask(task: Task, newValue: Task) {
+		setTasks((tasks) => tasks.map((t) => (t === task ? newValue : t)));
+	}
+
+	async function setCompleted(task: Task, completed: boolean) {
+		setTask(task, await taskRepo.save({ ...task, completed }));
+	}
+
+	async function setTitle(task: Task, title: string) {
+		setTask(task, { ...task, title });
+	}
+
+	async function saveTask(task: Task) {
+		try {
+			setTask(task, await taskRepo.save(task));
 		} catch (error: any) {
 			alert(error.message);
 		}
@@ -38,8 +69,17 @@ function App() {
 				{tasks.map((task) => {
 					return (
 						<div key={task.id}>
-							<input type='checkbox' checked={task.completed} />
-							{task.title}
+							<input
+								type='checkbox'
+								checked={task.completed}
+								onChange={(e) => setCompleted(task, e.target.checked)}
+							/>
+							<input
+								value={task.title}
+								onChange={(e) => setTitle(task, e.target.value)}
+							/>
+							<button onClick={() => saveTask(task)}>Save</button>
+							<button onClick={() => deleteTask(task)}>Delete</button>
 						</div>
 					);
 				})}

@@ -28,10 +28,5 @@
     "title": "A new task",
     "completed": false,
     "id": 6
-  },
-  {
-    "title": "Another task",
-    "completed": false,
-    "id": 7
   }
 ]
