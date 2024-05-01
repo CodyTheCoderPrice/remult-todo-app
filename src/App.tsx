@@ -18,8 +18,7 @@ function App() {
 	async function addTask(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		try {
-			const newTask = await taskRepo.insert({ title: newTaskTitle });
-			setTasks((tasks) => [...tasks, newTask]);
+			await taskRepo.insert({ title: newTaskTitle });
 			setNewTaskTitle('');
 		} catch (error: any) {
 			alert(error.message);
@@ -63,14 +62,16 @@ function App() {
 		<div>
 			<h1>Todos</h1>
 			<main>
-				<form onSubmit={(e) => addTask(e)}>
-					<input
-						value={newTaskTitle}
-						placeholder='What needs to be done?'
-						onChange={(e) => setNewTaskTitle(e.target.value)}
-					/>
-					<button>Add</button>
-				</form>
+				{taskRepo.metadata.apiInsertAllowed() && (
+					<form onSubmit={(e) => addTask(e)}>
+						<input
+							value={newTaskTitle}
+							placeholder='What needs to be done?'
+							onChange={(e) => setNewTaskTitle(e.target.value)}
+						/>
+						<button>Add</button>
+					</form>
+				)}
 				{tasks.map((task) => {
 					return (
 						<div key={task.id}>
@@ -84,7 +85,9 @@ function App() {
 								onChange={(e) => setTitle(task, e.target.value)}
 							/>
 							<button onClick={() => saveTask(task)}>Save</button>
-							<button onClick={() => deleteTask(task)}>Delete</button>
+							{taskRepo.metadata.apiDeleteAllowed() && (
+								<button onClick={() => deleteTask(task)}>Delete</button>
+							)}
 						</div>
 					);
 				})}

@@ -9,6 +9,7 @@ const validUsers: UserInfo[] = [
 	{
 		id: '2',
 		name: 'Steve',
+		roles: ['admin'],
 	},
 ];
 
