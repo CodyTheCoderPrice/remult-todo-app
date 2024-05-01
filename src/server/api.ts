@@ -9,6 +9,7 @@ export const api = remultExpress({
 	getUser: (req) => req.session!['user'],
 	dataProvider: createPostgresConnection({
 		connectionString:
+			process.env['DATABASE_URL'] ||
 			'postgres://postgres:PostgresEasyPassword@localhost:5432/remulttodo',
 	}),
 });

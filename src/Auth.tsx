@@ -57,7 +57,7 @@ export default function Auth() {
 		<>
 			<header>
 				Hello {remult.user!.name}{' '}
-				<button onClick={(e) => signOut()}>Sign Out</button>
+				<button onClick={() => signOut()}>Sign Out</button>
 			</header>
 			<App />
 		</>

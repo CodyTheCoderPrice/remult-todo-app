@@ -4,6 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
+		"start": "tsx src/server",
 		"dev": "vite",
 		"dev-node": "tsx watch src/server",
 		"build": "tsc && vite build",
